@@ -19,6 +19,7 @@ Monitor::~Monitor() {
     sem_destroy(&semaforo_);
     for(int i = 0; i < N_; ++i)
         sem_init(&processos_privado_[i], 0, 1);
+    delete[] processos_privado_;
 }
 
 void Monitor::wait(MonitorCond* cv) {
