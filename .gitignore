@@ -1,0 +1,13 @@
+/CMakeFiles
+/CMakeCache.txt
+*.cmake
+*.vcxproj
+*.filters
+*.sln
+/Debug
+/ipch
+/Win32
+/concorrente-ep3.dir
+*.user
+*.sdf
+*.opensdf
