@@ -10,6 +10,9 @@ class Monitor {
 
     //empty(cv), wait(cv), wait(cv,rank), signal(cv), signal all(cv), minrank(cv)
   private:
+    void entrada();
+    void saida();
+
     sem_t semaforo_;
 };
 
