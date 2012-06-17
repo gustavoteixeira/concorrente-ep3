@@ -1,9 +1,13 @@
 #ifndef MONITOR_H_
 #define MONITOR_H_
 
+#include <sys/types.h>
+#include <pthread.h>
 #include <semaphore.h>
+#include <queue>
 
 struct MonitorCond;
+struct QueueItem;
 
 class Monitor {
   public:
@@ -18,10 +22,10 @@ class Monitor {
   private:
     void entrada();
     void saida();
-
+    
     int N_;
     sem_t semaforo_;
-    sem_t *processos_privado_;
+    std::queue<sem_t*> processos_privados_;
 };
 
 #endif /* MONITOR_H_ */

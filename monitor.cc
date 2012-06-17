@@ -1,33 +1,36 @@
 #include "monitor.h"
-#include <queue>
 
 static int GET_ID_POR_MAGIA() { return 42; }
 
-
 struct MonitorCond {
-    std::queue<int> delay;
+    std::queue<pthread_t> delay;
+};
+
+struct QueueItem {
+    pthread_t thread_id;
+    sem_t* semaphore;
 };
 
 Monitor::Monitor(int N) : N_(N) {
     sem_init(&semaforo_, 0, 1);
-    processos_privado_ = new sem_t[N];
+    /*processos_privado_ = new sem_t[N];
     for(int i = 0; i < N; ++i)
-        sem_init(&processos_privado_[i], 0, 1);
+        sem_init(&processos_privado_[i], 0, 1);*/
 }
 
 Monitor::~Monitor() {
     sem_destroy(&semaforo_);
-    for(int i = 0; i < N_; ++i)
-        sem_init(&processos_privado_[i], 0, 1);
+    /*for(int i = 0; i < N_; ++i)
+        sem_init(&processos_privado_[i], 0, 1);*/
 }
 
 void Monitor::wait(MonitorCond* cv) {
     entrada();
 
-    int id = GET_ID_POR_MAGIA();
-    cv->delay.push(id);
+    sem_t semaphore;
+    processos_privados_.push(&semaphore);
     saida();
-    sem_wait(&processos_privado_[id]);
+    sem_wait(&semaphore);
     entrada();
 
     saida();
@@ -36,10 +39,10 @@ void Monitor::wait(MonitorCond* cv) {
 void Monitor::signal(MonitorCond* cv) {
     entrada();
 
-    if(!cv->delay.empty()) {
-        int id = cv->delay.front();
-        cv->delay.pop();
-        sem_post(&semaforo_);
+    if(!processos_privados_.empty()) {
+        sem_t* semaphore = processos_privados_.front();
+        processos_privados_.pop();
+        sem_post(semaphore);
     }
 
     saida();
