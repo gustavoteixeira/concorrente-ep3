@@ -3,27 +3,43 @@
 
 #include "monitor.h"
 #include "passageiro.h"
-#include <queue>
+#include <list>
+
+#ifdef _WIN32 /* _Win32 eh normalmente definido por compiladores compilando para sistemas Windows de 32 ou 64 bits */
+# include <windows.h>
+#elif __unix__ /* __unix__ eh normalmente definido por compiladores compilando para sistemas Unix. */
+# include <unistd.h>
+#endif
+
+#define TEMPO_NUMA_VOLTA 100
+#define TEMPO_NUMA_ATUALIZACAO 1
 
 struct MonitorCond;
 
 class Carro {
   public:
-    Carro(int id, int capacity):
+    Carro(int id, int capacity, Monitor* monitor):
         id_(id),
-        capacity_(capacity) {}
+        capacity_(capacity),
+        segundos_desde_inicio_volta_(0),
+        monitor_(monitor) {}
     ~Carro() {}
     
     int id() const { return id_; }
+    int segundos() { return segundos_desde_inicio_volta_; }
+    void set_segundos(int segundos) { segundos_desde_inicio_volta_ += segundos; }
+
     void carrega ();
     void descarrega();
-    void volta();
     
   private:
+    void Skip();
+
     int id_;
     int capacity_;
-    std::queue<Passageiro*> passageiros_;
-    Monitor* monitor;
+    int segundos_desde_inicio_volta_;
+    std::list<Passageiro*> passageiros_;
+    Monitor* monitor_;
     
 };
 

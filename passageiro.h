@@ -1,27 +1,40 @@
 #ifndef PASSAGEIRO_H_
 #define PASSAGEIRO_H_
 
+#include <pthread.h>
+#include <time.h>
 #include "monitor.h"
 
 struct MonitorCond;
 
 class Passageiro {
   public:
-    Passageiro(int id):
+    Passageiro(int id, Monitor* monitor):
         id_(id),
-        voltas_dadas_(0) {}
-    ~Passageiro() {}
-    
+        voltas_dadas_(0),
+        time_(time(NULL)),
+        monitor_(monitor) { sem_init(&semaforo_, 0, 0); }
+    ~Passageiro() { sem_destroy(&semaforo_); }
+    sem_t* semaforo() { return &semaforo_; }
+    time_t* tempo_de_chegada() { return &time_; }
+
     int id() const { return id_; }
+
+    void set_voltas_dadas(int voltas_dadas) { voltas_dadas_ = voltas_dadas; }
+
     bool bilhete_dourado() const { return bilhete_dourado_; }
     void pega_carona ();
-    void dar_voltas ();
+
+    void imprime_passageiro();
 
   private:
     int id_;
-    int voltas_dadas_;    
+    int voltas_dadas_;
     bool bilhete_dourado_;
-    Monitor* monitor;
+
+    time_t time_;
+    Monitor* monitor_;
+    sem_t semaforo_;
 };
 
 #endif /* PASSAGEIRO_H_ */

@@ -1,4 +1,7 @@
 EP3 - Programação Concorrente
 ===============
 
-Stuff goes here.
+TODO:
+
+Imprimir dados, parar execução para tal.
+Ver o que está errado.
