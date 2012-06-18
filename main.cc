@@ -1,6 +1,5 @@
 #include "carro.h"
 #include "passageiro.h"
-#include "extra.h"
 
 #include <time.h>
 #include <list>
@@ -60,6 +59,7 @@ int main(int argc, char** argv) {
     while(true) {
         contador_chegada_de_novo_passageiro += taxa_de_chegada;
         if(contador_chegada_de_novo_passageiro >= 1 && monitor.tamanho_fila_passageiros() <= NUMERO_MAXIMO_PASSAGEIROS ) {
+            printf("Cara\n");
             Passageiro passageiro = Passageiro(passageiro_id++, &monitor);
             pthread_create(&passageiros_threads[passageiro_id - 1], &passageiros_atributo, atualiza_passageiro, (void*) &passageiro);
             contador_chegada_de_novo_passageiro = 0;
