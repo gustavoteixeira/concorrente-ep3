@@ -1,8 +1,7 @@
 #include "passageiro.h"
 
 void Passageiro::pega_carona() {
-    MonitorCond* cv;
-    monitor_->wait(cv, this);
+    monitor_->wait(false, this);
     sem_wait(&semaforo_);
     voltas_dadas_++;
 }

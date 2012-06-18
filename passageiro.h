@@ -9,9 +9,10 @@ struct MonitorCond;
 
 class Passageiro {
   public:
-    Passageiro(int id, Monitor* monitor):
+    Passageiro(int id, Monitor* monitor, bool bilhete_dourado = false):
         id_(id),
         voltas_dadas_(0),
+        bilhete_dourado_(bilhete_dourado),
         time_(time(NULL)),
         monitor_(monitor) { sem_init(&semaforo_, 0, 0); }
     ~Passageiro() { sem_destroy(&semaforo_); }

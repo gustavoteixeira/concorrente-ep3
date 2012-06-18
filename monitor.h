@@ -17,14 +17,15 @@ class Monitor {
 
     //empty(cv), wait(cv,rank), signal_all(cv), minrank(cv)
 
-    void wait(MonitorCond* cv);
-    void wait(MonitorCond* cv, Passageiro* rank);
-    Passageiro* signal(MonitorCond* cv);
-    Passageiro* minrank(MonitorCond* cv);
-    void signal_all(MonitorCond* cv);
-    void empty(MonitorCond* cv);
+    void wait(bool cv);
+    void wait(bool cv, Passageiro* rank);
+    Passageiro* signal(bool cv);
+    Passageiro* minrank(bool cv);
+    void signal_all(bool cv);
+    void empty(bool cv);
 
-    int tamanho_fila_passageiros() { return objetos_de_rank_.size(); }
+    int tamanho_fila_passageiros();
+    void print_list_passageiros();
 
   private:
     void entrada();

@@ -12,7 +12,7 @@
 #endif
 
 #define TEMPO_NUMA_VOLTA 100
-#define TEMPO_NUMA_ATUALIZACAO 1
+#define TEMPO_NUMA_ATUALIZACAO 0.1
 
 struct MonitorCond;
 
@@ -22,15 +22,19 @@ class Carro {
         id_(id),
         capacity_(capacity),
         segundos_desde_inicio_volta_(0),
-        monitor_(monitor) {}
-    ~Carro() {}
+        monitor_(monitor) { sem_init(&semaforo_, 0, 0); }
+    ~Carro() { sem_destroy(&semaforo_); }
     
     int id() const { return id_; }
     int segundos() { return segundos_desde_inicio_volta_; }
     void set_segundos(int segundos) { segundos_desde_inicio_volta_ += segundos; }
+    void adiciona_segundos(int segundos) { segundos_desde_inicio_volta_ = segundos; }
 
     void carrega ();
     void descarrega();
+
+    void stop();
+    void resume();
     
   private:
     void Skip();
@@ -39,6 +43,7 @@ class Carro {
     int capacity_;
     int segundos_desde_inicio_volta_;
     std::list<Passageiro*> passageiros_;
+    sem_t semaforo_;
     Monitor* monitor_;
     
 };

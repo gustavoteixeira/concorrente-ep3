@@ -20,9 +20,9 @@ Monitor::~Monitor() {
         sem_init(&processos_privado_[i], 0, 1);*/
 }
 
-void Monitor::wait(MonitorCond* cv) {
+void Monitor::wait(bool cv) {
     entrada();
-
+    
     sem_t semaphore;
     sem_init(&semaphore, 0, 0);
     processos_privados_.push(&semaphore);
@@ -34,12 +34,13 @@ void Monitor::wait(MonitorCond* cv) {
     saida();
 }
 
-void Monitor::wait(MonitorCond* cv, Passageiro* rank) {
+void Monitor::wait(bool cv, Passageiro* rank) {
     entrada();
-
+    
     if(rank->bilhete_dourado()) {
         std::list<Passageiro*>::iterator it = objetos_de_rank_.end();
-        while( it!=objetos_de_rank_.begin() && (difftime(*rank->tempo_de_chegada(), *(*it)->tempo_de_chegada())) > 0 )
+        while( (difftime(*rank->tempo_de_chegada(), *(*it)->tempo_de_chegada())) > 0 
+               && it!=objetos_de_rank_.begin() && (*it)->bilhete_dourado())
             it--;
         objetos_de_rank_.insert(it, rank);
     }
@@ -57,9 +58,9 @@ void Monitor::wait(MonitorCond* cv, Passageiro* rank) {
     saida();
 }
 
-Passageiro* Monitor::signal(MonitorCond* cv) {
+Passageiro* Monitor::signal(bool cv) {
     entrada();
-
+    
     Passageiro* passageiro = NULL;
     unranked_signal();
     passageiro = ranked_signal();
@@ -68,20 +69,45 @@ Passageiro* Monitor::signal(MonitorCond* cv) {
     return passageiro;
 }
 
-Passageiro* Monitor::minrank(MonitorCond* cv) {
+Passageiro* Monitor::minrank(bool cv) {
+    entrada();
+
     if(!objetos_de_rank_.empty())
         return objetos_de_rank_.front();
+
+    saida();
 }
 
-void Monitor::signal_all(MonitorCond* cv) {
+void Monitor::signal_all(bool cv) {
+    entrada();
+
     while(!processos_privados_.empty())
         unranked_signal();
     while(!objetos_de_rank_.empty())
         ranked_signal();
+
+    saida();
 }
 
-void Monitor::empty(MonitorCond* cv) {
+void Monitor::empty(bool cv) {
+    entrada();
+
     objetos_de_rank_.clear();
+
+    saida();
+}
+
+int Monitor::tamanho_fila_passageiros() {
+    if(!processos_privados_.empty())
+        return processos_privados_.size();
+    else if(!objetos_de_rank_.empty())
+        return objetos_de_rank_.size();
+    return 0;
+}
+
+void Monitor::print_list_passageiros() {
+    for(std::list<Passageiro*>::iterator it = objetos_de_rank_.begin(); it != objetos_de_rank_.end(); it++)
+        (*it)->imprime_passageiro();
 }
 
 void Monitor::entrada() {
