@@ -8,9 +8,9 @@
 #include <cstdlib>
 #include <cstdio>
 
-#define NUMERO_CARROS    1
+#define NUMERO_CARROS    2
 #define CAPACIDADE_CARRO 8
-#define NUMERO_MAXIMO_PASSAGEIROS 16
+#define NUMERO_MAXIMO_PASSAGEIROS 32
 
 /* Cada passagem por atualiza_carro = 1 unidade de tempo.*/
 
