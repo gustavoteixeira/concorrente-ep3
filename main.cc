@@ -14,6 +14,8 @@
 
 /* Cada passagem por atualiza_carro = 1 unidade de tempo.*/
 
+std::vector<Carro*> carros;
+
 static void Skip() {
     #ifndef WIN32
 	struct timespec req, rem;
@@ -50,6 +52,9 @@ void* atualiza_passageiro(Worker* arg) {
 void print_dados(Monitor* monitor) {
     printf("Tamanho da fila de passageiros: %d\n", monitor->tamanho_fila_passageiros());
     monitor->print_list_passageiros();
+    printf("\n\n");
+    for(int i = 0; i < NUMERO_CARROS; i++)
+		carros[i]->print();
     printf("\n");
 }
 
@@ -58,7 +63,6 @@ int main(int argc, char** argv) {
     int carro_id = 0, passageiro_id = 0;
     int chance = 0;
     double taxa_de_chegada = 0.25, contador_chegada_de_novo_passageiro = 0;
-    std::list<Carro*> carros;
 
 	Worker** carros_threads = new Worker*[NUMERO_CARROS];
 
@@ -81,6 +85,7 @@ int main(int argc, char** argv) {
 			Passageiro* passageiro = new Passageiro(passageiro_id++, &monitor);
 			(new Worker(atualiza_passageiro, passageiro))->Run();
             contador_chegada_de_novo_passageiro = 0;
+			print_dados(&monitor);
         }
 		Skip();
     }

@@ -21,6 +21,7 @@ struct MonitorCond;
 class Carro {
   public:
     Carro(int id, size_t capacity, Monitor* monitor):
+		andando_(false),
         id_(id),
         capacity_(capacity),
         segundos_desde_inicio_volta_(0),
@@ -37,10 +38,15 @@ class Carro {
 
     void stop();
     void resume();
+
+	void set_andando(bool b) { andando_ = b; }
+
+	void print();
     
   private:
     void Skip();
 
+	bool andando_;
     int id_;
     size_t capacity_;
     double segundos_desde_inicio_volta_;

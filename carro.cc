@@ -3,20 +3,25 @@
 #include <cstdio>
 
 void Carro::carrega() {
-    sem_wait(&semaforo_);
     Passageiro* passageiro;
+    
+	sem_wait(&semaforo_);
     while(passageiros_.size() < capacity_) {
+		sem_post(&semaforo_);
         passageiro = monitor_->signal(false);
+		sem_wait(&semaforo_);
         if(passageiro == NULL)
             Skip();
         else
             passageiros_.push_back(passageiro);
     }
+	andando_ = true;
     sem_post(&semaforo_);
 }
 
 void Carro::descarrega() {
     sem_wait(&semaforo_);
+	andando_ = false;
     for(std::list<Passageiro*>::iterator it = passageiros_.begin(); it != passageiros_.end(); it++)
         sem_post( (*it)->semaforo() );
     passageiros_.clear();
@@ -28,6 +33,18 @@ void Carro::stop() {
 }
 
 void Carro::resume() {
+    sem_post(&semaforo_);
+}
+
+void Carro::print() {
+    sem_wait(&semaforo_);
+	printf("Carro %d: %u passageiros. Em Movimento? : %c\n", id_, passageiros_.size(), andando_ ? 'S' : 'N');
+	int i = 0;
+	for(std::list<Passageiro*>::iterator it = passageiros_.begin(); it != passageiros_.end(); it++) {
+		(*it)->imprime_passageiro();
+		if(i % 8 == 7) printf("\n");
+	}
+	printf("\n");
     sem_post(&semaforo_);
 }
 

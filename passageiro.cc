@@ -10,7 +10,7 @@ void Passageiro::pega_carona() {
 
 void Passageiro::imprime_passageiro() {
     if(bilhete_dourado_)
-        printf("D%dK%d", id_, voltas_dadas_);
+        printf("D%5.dK%d", id_, voltas_dadas_);
     else
-        printf(" %dK%d", id_, voltas_dadas_);
+        printf(" %5.dK%d", id_, voltas_dadas_);
 }
