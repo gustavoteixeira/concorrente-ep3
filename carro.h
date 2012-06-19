@@ -24,7 +24,7 @@ class Carro {
         id_(id),
         capacity_(capacity),
         segundos_desde_inicio_volta_(0),
-        monitor_(monitor) { sem_init(&semaforo_, 0, 0); }
+        monitor_(monitor) { sem_init(&semaforo_, 0, 1); }
     ~Carro() { sem_destroy(&semaforo_); }
     
     int id() const { return id_; }
