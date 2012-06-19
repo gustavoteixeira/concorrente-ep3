@@ -1,5 +1,6 @@
 #include "carro.h"
 #include "passageiro.h"
+#include "worker.h"
 
 #include <time.h>
 #include <list>
@@ -13,8 +14,8 @@
 
 /* Cada passagem por atualiza_carro = 1 unidade de tempo.*/
 
-void* atualiza_carro(void *arg) {
-    Carro* carro = (Carro*) arg;
+void* atualiza_carro(Worker *arg) {
+    Carro* carro = (Carro*) arg->data();
     carro->set_segundos(0);
     carro->carrega();
     while(true) {
@@ -28,8 +29,8 @@ void* atualiza_carro(void *arg) {
     return NULL;
 }
 
-void* atualiza_passageiro(void* arg) {
-    Passageiro* passageiro = (Passageiro*) arg;
+void* atualiza_passageiro(Worker* arg) {
+    Passageiro* passageiro = (Passageiro*) arg->data();
     passageiro->pega_carona();
     passageiro->pega_carona();
     delete passageiro;
@@ -48,25 +49,15 @@ int main(int argc, char** argv) {
     int chance = 0;
     double taxa_de_chegada = 0.25, contador_chegada_de_novo_passageiro = 0;
     std::list<Carro*> carros;
-    pthread_t *carros_threads, *passageiros_threads;
-    pthread_attr_t carros_atributo, passageiros_atributo;
 
-    carros_threads = static_cast<pthread_t*>(malloc((NUMERO_CARROS)*sizeof( *(carros_threads) )));
-    if(!carros_threads)
-        return 1;
-    passageiros_threads = static_cast<pthread_t*>(malloc((NUMERO_MAXIMO_PASSAGEIROS)*sizeof( *(passageiros_threads) )));
-    if(!passageiros_threads)
-        return 1;
-
-    pthread_attr_init(&carros_atributo);
-    pthread_attr_init(&passageiros_atributo);
-    pthread_attr_setdetachstate(&carros_atributo, PTHREAD_CREATE_DETACHED);
-    pthread_attr_setdetachstate(&passageiros_atributo, PTHREAD_CREATE_DETACHED);
+	Worker** carros_threads = new Worker*[NUMERO_CARROS];
+	Worker** passageiros_threads = new Worker*[NUMERO_MAXIMO_PASSAGEIROS];
 
     for(int i = 0; i < NUMERO_CARROS; i++) {
-        Carro carro = Carro(carro_id++, CAPACIDADE_CARRO, &monitor);
-        carros.push_back(&carro);
-        pthread_create(&carros_threads[i], &carros_atributo, atualiza_carro, (void*) &carro);
+        Carro* carro = new Carro(carro_id++, CAPACIDADE_CARRO, &monitor);
+        carros.push_back(carro);
+		carros_threads[i] = new Worker(atualiza_carro, carro);
+		carros_threads[i]->Run();
     }
 
     while(true) {
@@ -77,8 +68,10 @@ int main(int argc, char** argv) {
             print_dados(&monitor);
             for(std::list<Carro*>::iterator it = carros.begin(); it != carros.end(); it++)
                 (*it)->resume();
-            Passageiro passageiro = Passageiro(passageiro_id++, &monitor);
-            pthread_create(&passageiros_threads[passageiro_id - 1], &passageiros_atributo, atualiza_passageiro, (void*) &passageiro);
+
+            Passageiro* passageiro = new Passageiro(passageiro_id++, &monitor);
+			passageiros_threads[passageiro_id - 1] = new Worker(atualiza_passageiro, passageiro);
+			passageiros_threads[passageiro_id - 1]->Run();
             contador_chegada_de_novo_passageiro = 0;
         }
     }
