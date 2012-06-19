@@ -63,11 +63,11 @@ int main(int argc, char** argv) {
     while(true) {
         contador_chegada_de_novo_passageiro += taxa_de_chegada;
         if(contador_chegada_de_novo_passageiro >= 1 && monitor.tamanho_fila_passageiros() <= NUMERO_MAXIMO_PASSAGEIROS ) {
-            for(std::list<Carro*>::iterator it = carros.begin(); it != carros.end(); it++)
-                (*it)->stop();
-            print_dados(&monitor);
-            for(std::list<Carro*>::iterator it = carros.begin(); it != carros.end(); it++)
-                (*it)->resume();
+			//for(std::list<Carro*>::iterator it = carros.begin(); it != carros.end(); it++)
+            //    (*it)->stop();
+            //print_dados(&monitor);
+            //for(std::list<Carro*>::iterator it = carros.begin(); it != carros.end(); it++)
+            //    (*it)->resume();
 
             Passageiro* passageiro = new Passageiro(passageiro_id++, &monitor);
 			passageiros_threads[passageiro_id - 1] = new Worker(atualiza_passageiro, passageiro);

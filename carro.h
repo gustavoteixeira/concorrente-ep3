@@ -27,8 +27,8 @@ class Carro {
     
     int id() const { return id_; }
     int segundos() { return segundos_desde_inicio_volta_; }
-    void set_segundos(int segundos) { segundos_desde_inicio_volta_ += segundos; }
-    void adiciona_segundos(int segundos) { segundos_desde_inicio_volta_ = segundos; }
+    void set_segundos(int segundos) { segundos_desde_inicio_volta_ = segundos; }
+    void adiciona_segundos(int segundos) { segundos_desde_inicio_volta_ += segundos; }
 
     void carrega ();
     void descarrega();
