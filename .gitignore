@@ -11,4 +11,6 @@
 *.user
 *.sdf
 *.opensdf
-*.suo
+*.suoMakefile
+concorrente-ep3
+Makefile

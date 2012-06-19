@@ -1,5 +1,7 @@
 #include "passageiro.h"
 
+#include <cstdio>
+
 void Passageiro::pega_carona() {
     monitor_->wait(false, this);
     sem_wait(&semaforo_);

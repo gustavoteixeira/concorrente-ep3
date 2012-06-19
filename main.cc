@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include <cstdlib>
+#include <cstdio>
 
 #define NUMERO_CARROS    2
 #define CAPACIDADE_CARRO 8
