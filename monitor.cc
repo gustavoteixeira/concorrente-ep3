@@ -97,16 +97,28 @@ void Monitor::empty(bool cv) {
 }
 
 int Monitor::tamanho_fila_passageiros() {
-    if(!processos_privados_.empty())
+    entrada();
+
+    if(!processos_privados_.empty()) {
+        saida();
         return processos_privados_.size();
-    else if(!objetos_de_rank_.empty())
+    }
+    else if(!objetos_de_rank_.empty()) {
+        saida();
         return objetos_de_rank_.size();
+    }
+
+    saida();
     return 0;
 }
 
 void Monitor::print_list_passageiros() {
+    entrada();
+
     for(std::list<Passageiro*>::iterator it = objetos_de_rank_.begin(); it != objetos_de_rank_.end(); it++)
         (*it)->imprime_passageiro();
+
+    saida();
 }
 
 void Monitor::entrada() {
