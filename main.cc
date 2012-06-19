@@ -11,6 +11,8 @@
 #define NUMERO_CARROS    2
 #define CAPACIDADE_CARRO 8
 #define NUMERO_MAXIMO_PASSAGEIROS 32
+#define TEMPO_NUMA_VOLTA 100
+#define TEMPO_NUMA_ATUALIZACAO 0.1
 
 /* Cada passagem por atualiza_carro = 1 unidade de tempo.*/
 

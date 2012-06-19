@@ -13,9 +13,6 @@
 
 #include <cstdio>
 
-#define TEMPO_NUMA_VOLTA 100
-#define TEMPO_NUMA_ATUALIZACAO 0.1
-
 struct MonitorCond;
 
 class Carro {
