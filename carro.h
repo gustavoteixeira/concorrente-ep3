@@ -11,6 +11,8 @@
 # include <unistd.h>
 #endif
 
+#include <cstdio>
+
 #define TEMPO_NUMA_VOLTA 100
 #define TEMPO_NUMA_ATUALIZACAO 0.1
 
@@ -18,7 +20,7 @@ struct MonitorCond;
 
 class Carro {
   public:
-    Carro(int id, int capacity, Monitor* monitor):
+    Carro(int id, size_t capacity, Monitor* monitor):
         id_(id),
         capacity_(capacity),
         segundos_desde_inicio_volta_(0),
@@ -26,9 +28,9 @@ class Carro {
     ~Carro() { sem_destroy(&semaforo_); }
     
     int id() const { return id_; }
-    int segundos() { return segundos_desde_inicio_volta_; }
-    void set_segundos(int segundos) { segundos_desde_inicio_volta_ = segundos; }
-    void adiciona_segundos(int segundos) { segundos_desde_inicio_volta_ += segundos; }
+    double segundos() { return segundos_desde_inicio_volta_; }
+    void set_segundos(double segundos) { segundos_desde_inicio_volta_ = segundos; }
+    void adiciona_segundos(double segundos) { segundos_desde_inicio_volta_ += segundos; }
 
     void carrega ();
     void descarrega();
@@ -40,8 +42,8 @@ class Carro {
     void Skip();
 
     int id_;
-    int capacity_;
-    int segundos_desde_inicio_volta_;
+    size_t capacity_;
+    double segundos_desde_inicio_volta_;
     std::list<Passageiro*> passageiros_;
     sem_t semaforo_;
     Monitor* monitor_;

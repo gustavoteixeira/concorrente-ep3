@@ -14,6 +14,15 @@
 
 /* Cada passagem por atualiza_carro = 1 unidade de tempo.*/
 
+static void Skip() {
+    #ifndef WIN32
+	struct timespec req, rem;
+	req.tv_sec = 0;
+	req.tv_nsec = 5000;
+	nanosleep(&req, &rem);
+	#endif
+}
+
 void* atualiza_carro(Worker *arg) {
     Carro* carro = (Carro*) arg->data();
     carro->set_segundos(0);
@@ -25,6 +34,7 @@ void* atualiza_carro(Worker *arg) {
             carro->descarrega();
             carro->carrega();
         }
+		Skip();
     }
     return NULL;
 }
@@ -69,9 +79,12 @@ int main(int argc, char** argv) {
             //for(std::list<Carro*>::iterator it = carros.begin(); it != carros.end(); it++)
             //    (*it)->resume();
 
-            Passageiro* passageiro = new Passageiro(passageiro_id++, &monitor);
-			passageiros_threads[passageiro_id - 1] = new Worker(atualiza_passageiro, passageiro);
-			passageiros_threads[passageiro_id - 1]->Run();
+			if(passageiro_id < NUMERO_MAXIMO_PASSAGEIROS) {
+				puts("FUCK YEAH");
+				Passageiro* passageiro = new Passageiro(passageiro_id++, &monitor);
+				passageiros_threads[passageiro_id - 1] = new Worker(atualiza_passageiro, passageiro);
+				passageiros_threads[passageiro_id - 1]->Run();
+			}
             contador_chegada_de_novo_passageiro = 0;
         }
     }
