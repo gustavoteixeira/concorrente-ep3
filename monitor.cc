@@ -100,12 +100,14 @@ int Monitor::tamanho_fila_passageiros() {
     entrada();
 
     if(!processos_privados_.empty()) {
+        int size = processos_privados_.size();
         saida();
-        return processos_privados_.size();
+        return size;
     }
     else if(!objetos_de_rank_.empty()) {
+        int size = objetos_de_rank_.size();
         saida();
-        return objetos_de_rank_.size();
+        return size;
     }
 
     saida();
