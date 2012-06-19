@@ -13,11 +13,9 @@ class Passageiro {
         id_(id),
         voltas_dadas_(0),
         bilhete_dourado_(bilhete_dourado),
-        time_(time(NULL)),
         monitor_(monitor) { sem_init(&semaforo_, 0, 0); }
     ~Passageiro() { sem_destroy(&semaforo_); }
     sem_t* semaforo() { return &semaforo_; }
-    time_t* tempo_de_chegada() { return &time_; }
 
     int id() const { return id_; }
 
@@ -33,7 +31,6 @@ class Passageiro {
     int voltas_dadas_;
     bool bilhete_dourado_;
 
-    time_t time_;
     Monitor* monitor_;
     sem_t semaforo_;
 };

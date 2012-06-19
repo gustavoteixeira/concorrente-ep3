@@ -39,15 +39,13 @@ void Monitor::wait(bool cv, Passageiro* rank) {
     
     if(rank->bilhete_dourado()) {
         std::list<Passageiro*>::iterator it = objetos_de_rank_.end();
-        while( (difftime(*rank->tempo_de_chegada(), *(*it)->tempo_de_chegada())) > 0 
-               && it!=objetos_de_rank_.begin() && (*it)->bilhete_dourado())
+        while( it!=objetos_de_rank_.begin() && (*it)->bilhete_dourado() )
             it--;
         objetos_de_rank_.insert(it, rank);
     }
     else {
         std::list<Passageiro*>::iterator it = objetos_de_rank_.begin();
-        while( it!=objetos_de_rank_.end() && !(*it)->bilhete_dourado()
-               && (difftime(*rank->tempo_de_chegada(), *(*it)->tempo_de_chegada())) > 0 )
+        while( it!=objetos_de_rank_.end() && !(*it)->bilhete_dourado() )
             it++;
         objetos_de_rank_.insert(it, rank);
     }
@@ -74,6 +72,7 @@ Passageiro* Monitor::minrank(bool cv) {
 
     if(!objetos_de_rank_.empty())
         return objetos_de_rank_.front();
+    return NULL;
 
     saida();
 }

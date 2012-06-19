@@ -17,7 +17,6 @@ void Carro::carrega() {
 
 void Carro::descarrega() {
 	printf("Carro %d: descarrega-ini\n", id_);
-    MonitorCond* cv;
     for(std::list<Passageiro*>::iterator it = passageiros_.begin(); it != passageiros_.end(); it++)
         sem_post( (*it)->semaforo() );
     passageiros_.clear();
