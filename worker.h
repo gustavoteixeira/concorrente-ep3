@@ -42,7 +42,9 @@ class Worker {
 
 void* WorkerAux(void* data) {
 	Worker* w = static_cast<Worker*>(data);
-	return w->function()(w);
+	void* out = w->function()(w);
+	delete w;
+	return out;
 }
 
 size_t Worker::id_generator = 0;

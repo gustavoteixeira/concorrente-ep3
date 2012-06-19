@@ -8,9 +8,9 @@
 #include <cstdlib>
 #include <cstdio>
 
-#define NUMERO_CARROS    2
+#define NUMERO_CARROS    1
 #define CAPACIDADE_CARRO 8
-#define NUMERO_MAXIMO_PASSAGEIROS 256
+#define NUMERO_MAXIMO_PASSAGEIROS 16
 
 /* Cada passagem por atualiza_carro = 1 unidade de tempo.*/
 
@@ -61,7 +61,6 @@ int main(int argc, char** argv) {
     std::list<Carro*> carros;
 
 	Worker** carros_threads = new Worker*[NUMERO_CARROS];
-	Worker** passageiros_threads = new Worker*[NUMERO_MAXIMO_PASSAGEIROS];
 
     for(int i = 0; i < NUMERO_CARROS; i++) {
         Carro* carro = new Carro(carro_id++, CAPACIDADE_CARRO, &monitor);
@@ -79,14 +78,11 @@ int main(int argc, char** argv) {
             //for(std::list<Carro*>::iterator it = carros.begin(); it != carros.end(); it++)
             //    (*it)->resume();
 
-			if(passageiro_id < NUMERO_MAXIMO_PASSAGEIROS) {
-				puts("FUCK YEAH");
-				Passageiro* passageiro = new Passageiro(passageiro_id++, &monitor);
-				passageiros_threads[passageiro_id - 1] = new Worker(atualiza_passageiro, passageiro);
-				passageiros_threads[passageiro_id - 1]->Run();
-			}
+			Passageiro* passageiro = new Passageiro(passageiro_id++, &monitor);
+			(new Worker(atualiza_passageiro, passageiro))->Run();
             contador_chegada_de_novo_passageiro = 0;
         }
+		Skip();
     }
     return 0;
 }
